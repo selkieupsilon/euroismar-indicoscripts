@@ -102,8 +102,40 @@ def sortByStartTime(talks):
     talks.sort(key=lambda t: dt.strptime(t['startDate']['date']+' '+t['startDate']['time'],"%Y-%m-%d %H:%M:%S"))
     return talks
 
+# def checkRoomStartTime(paralleltalks):
+#     for talk in paralleltalks:
+#         try:
+#             room = talk.get("room")
+#             starttimeDict = talk.get("startDate")
+#             starttimeStr = starttimeDict["date"] + " " + starttimeDict["time"]
+#         except:
+#             print "Warning: something wrong."
+#             return
+#         print room, starttimeStr
+
+def sortByRoomTime(paralleltalks):
+    for talk in paralleltalks:
+        try:
+            room = talk.get("room")
+        except:
+            print "Warning: talk without assigned room in exported JSON list."
+            return
+        #print room
+
+    sortRoomOrder = {
+        "Max Kade Auditorium": 0,
+        "Lecture Hall A": 1,
+        "Lecture Hall B": 2,
+        "Lecture Hall C": 3,
+        "Lecture Hall D": 4,
+    }
+
+    paralleltalks.sort(key=lambda t: sortRoomOrder[str(t['room'])])
+    paralleltalks = sortByStartTime(paralleltalks)
+    return paralleltalks
+
 if __name__ == '__main__':
-    data = jsonGet("clean_contrib-all.json")
+    data = jsonGet("contrib-all.json")
 
     posterList = []
     paralleltalkList = []
@@ -125,14 +157,13 @@ if __name__ == '__main__':
             prizeList.append(contrib)
 
     contribsDict = {
-        "prizes": sortByStartTime(prizeList),
-        "plenarys": sortByStartTime(plenaryList),
-        "paralleltalks": sortByStartTime(paralleltalkList),
+        "prize-PR": sortByStartTime(prizeList),
+        "plenary-PL": sortByStartTime(plenaryList),
+        "parallelsessions-PS": sortByRoomTime(paralleltalkList),
         "posters": sortByBoardNum(posterList)
     }
 
     for key in contribsDict :
         outputJsonFile(contribsDict[key],filesuffix=key, timestamp=False)
-
 
     print ("done")
