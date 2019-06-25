@@ -198,6 +198,6 @@ if __name__ == '__main__':
     TTtalkList = [] 
     for talk in timetable:
         TTtalkList.append(TTtextoutput(talk))
-    outputJsonFile(TTtalkList, fileprefix="timetableExtracted_", timestamp=args.timestamp)
+    outputJsonFile(TTtalkList, fileprefix="timetable_titles_", timestamp=args.timestamp)
 
     print ("done")
