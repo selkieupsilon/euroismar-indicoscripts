@@ -1,19 +1,35 @@
 # Script to obtain JSON of contributions for the typesetters
 
+import json
+
 import hashlib
 import hmac
 import urllib
 import time
-
-import json
 import requests
-
 from ConfigParser import SafeConfigParser as ConfigParser
 
 from datetime import datetime as dt
 
-config = ConfigParser()
-config.read('config.ini')
+def jsonGet(jsonFile):
+    try:
+        with open (jsonFile,"r") as read_file:
+            jsonData = json.load(read_file)
+        return jsonData
+
+    except:
+        signedUrl = signedContribsUrl()
+
+        print ("requesting JSON")
+        response = requests.get(signedUrl)
+        rawdata = json.loads(response.text)
+
+        print ("tidy up JSON")
+        contribsdata = rawdata.get('results')[0].get('contributions')
+
+        outputJsonFile(contribsdata, filename=jsonFile, timestamp=False)
+
+        return contribsdata
 
 def build_indico_request(path, params, api_key=None, secret_key=None, only_public=False, persistent=False):
     items = params.items() if hasattr(params, 'items') else list(params)
@@ -32,7 +48,9 @@ def build_indico_request(path, params, api_key=None, secret_key=None, only_publi
         return path
     return '%s?%s' % (path, urllib.urlencode(items))
 
-if __name__ == '__main__':
+def signedContribsUrl():
+    config = ConfigParser()
+    config.read('config.ini')
     API_KEY = config.get('default','API_KEY')
     SECRET_KEY = config.get('default','SECRET_KEY')
     PATH = config.get('default','PATH')
@@ -42,38 +60,56 @@ if __name__ == '__main__':
         'detail': 'contributions'
     }
 
-signedurl = PREFIX+build_indico_request(PATH, PARAMS, API_KEY, SECRET_KEY)
+    return PREFIX+build_indico_request(PATH, PARAMS, API_KEY, SECRET_KEY)
 
-print ("requesting JSON")
-response = requests.get(signedurl)
+def outputJsonFile(data, filesuffix="all", timestamp=True, filename=None):
+    if not filename:
+        filename = "clean_contrib-" + filesuffix
 
-print ("loading JSON")
-data = json.loads(response.text)
+        if timestamp:
+            now = dt.now()
+            timestamp = now.strftime("%Y%m%d-%H%M")
+            filename = filename + "_" + timestamp
+            
+        filename += ".json"
+    print ("writing "+filename)
 
-#with open ("raw_contrib-http-export.json","r") as read_file:
-#    data = json.load(read_file)
+    with open (filename,"w") as write_file:
+         json.dump(data, write_file)
 
-contribs = data.get('results')[0].get('contributions')
 
-print ("tidy up JSON")
-now = dt.now()
-timestamp = now.strftime("%Y%m%d-%H%M")
+if __name__ == '__main__':
+    data = jsonGet("clean_contrib-all.json")
+    #outputJsonFile(data, filesuffix="prizes")
 
-with open("clean_contrib-all_"+timestamp+".json", "w") as write_file:
-    json.dump(contribs, write_file)
+# posterList = []
+# paralleltalkList = []
+# plenaryList = []
+# prizeList = []
+# contribsDict = {
+#     "prizes": prizeList,
+#     "plenarys": plenaryList,
+#     "paralleltalks": paralleltalkList,
+#     "poster": posterList
+# }
 
-posterList = []
-paralleltalkList = []
-plenaryList = []
-prizeList = []
+# #prizeList, plenaryList, paralleltalkList, posterList
 
-for contrib in contribs :
-    contribType = contrib.get('type')
-    if contribType == 'Poster':
-        posterList.append(contrib)
-    if contribType == 'Talk' or contribType == 'Invited talk':
-        paralleltalkList.append(contrib)
-    if contribType == 'Plenary talk':
-        plenaryList.append(contrib)
+# for contrib in contribs :
+#     contribType = contrib.get('type')
+#     if contribType == 'Poster':
+#         posterList.append(contrib)
+#     if contribType == 'Talk' or contribType == 'Invited talk':
+#         paralleltalkList.append(contrib)
+#     if contribType == 'Plenary talk':
+#         plenaryList.append(contrib)
+#     if contribType == 'Prize lecture':
+#         prizeList.append(contrib)
 
-print ("done")
+# for alist in contribsLists :
+#     filecounter = contribsLists
+#     with open("clean_contrib-"+filecounter+".json", "w") as write_file:
+#         json.dump(alist, write_file)
+#     filecounter += 1
+
+    print ("done")
