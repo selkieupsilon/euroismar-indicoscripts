@@ -80,36 +80,34 @@ def outputJsonFile(data, filesuffix="all", timestamp=True, filename=None):
 
 if __name__ == '__main__':
     data = jsonGet("clean_contrib-all.json")
-    #outputJsonFile(data, filesuffix="prizes")
 
-# posterList = []
-# paralleltalkList = []
-# plenaryList = []
-# prizeList = []
-# contribsDict = {
-#     "prizes": prizeList,
-#     "plenarys": plenaryList,
-#     "paralleltalks": paralleltalkList,
-#     "poster": posterList
-# }
+    posterList = []
+    paralleltalkList = []
+    plenaryList = []
+    prizeList = []
 
-# #prizeList, plenaryList, paralleltalkList, posterList
+    #prizeList, plenaryList, paralleltalkList, posterList
 
-# for contrib in contribs :
-#     contribType = contrib.get('type')
-#     if contribType == 'Poster':
-#         posterList.append(contrib)
-#     if contribType == 'Talk' or contribType == 'Invited talk':
-#         paralleltalkList.append(contrib)
-#     if contribType == 'Plenary talk':
-#         plenaryList.append(contrib)
-#     if contribType == 'Prize lecture':
-#         prizeList.append(contrib)
+    for contrib in data :
+        contribType = contrib.get('type')
+        if contribType == 'Poster':
+            posterList.append(contrib)
+        if contribType == 'Talk' or contribType == 'Invited talk':
+            paralleltalkList.append(contrib)
+        if contribType == 'Plenary talk':
+            plenaryList.append(contrib)
+        if contribType == 'Prize lecture':
+            prizeList.append(contrib)
 
-# for alist in contribsLists :
-#     filecounter = contribsLists
-#     with open("clean_contrib-"+filecounter+".json", "w") as write_file:
-#         json.dump(alist, write_file)
-#     filecounter += 1
+    contribsDict = {
+        "prizes": prizeList,
+        "plenarys": plenaryList,
+        "paralleltalks": paralleltalkList,
+        "posters": posterList
+    }
+
+    for key in contribsDict :
+        outputJsonFile(contribsDict[key],filesuffix=key)
+
 
     print ("done")
