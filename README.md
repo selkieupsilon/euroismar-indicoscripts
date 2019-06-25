@@ -1,5 +1,5 @@
 # euroismar-indicoscripts
-Python scripts for exporting data and various specific tasks from the Indico conference management system.
+Python scripts for exporting data from and performing various specific tasks with the Indico conference management system.
 Developed for EUROISMAR 2019 http://www.euroismar2019.org/
 
 Tasks:
