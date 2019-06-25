@@ -138,6 +138,20 @@ def sortByRoomTime(paralleltalks):
     paralleltalks = sortByStartTime(paralleltalks)
     return paralleltalks
 
+def TTtextoutput(x):
+    textList = []
+    textList.append(x["startDate"]["date"]+" "+x["startDate"]["time"]+" - "+x["endDate"]["time"])
+    textList.append(x["room"])
+    textList.append(x["session"])
+
+    try:
+        textList.append(x["speakers"][0]["first_name"]+" "+x["speakers"][0]["last_name"])
+    except:
+        textList.append("no speaker")
+        pass
+    textList.append(x["title"])
+    return textList
+
 if __name__ == '__main__':
     data = jsonGet("contrib-all.json")
 
@@ -173,5 +187,14 @@ if __name__ == '__main__':
 
     for key in contribsDict :
         outputJsonFile(contribsDict[key],fileprefix="abstract_", filesuffix=key, timestamp=args.timestamp)
+
+    timetable = prizeList + plenaryList + paralleltalkList
+
+    #outputJsonFile(sortByRoomTime(timetable), fileprefix="timetable_", timestamp=args.timestamp)
+
+    TTtalkList = [] 
+    for talk in timetable:
+        TTtalkList.append(TTtextoutput(talk))
+    outputJsonFile(TTtalkList, fileprefix="timetableExtracted_", timestamp=args.timestamp)
 
     print ("done")
