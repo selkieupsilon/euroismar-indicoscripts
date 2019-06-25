@@ -78,6 +78,16 @@ def outputJsonFile(data, filesuffix="all", timestamp=True, filename=None):
          json.dump(data, write_file)
 
 
+def sortByBoardNum(posters):
+
+    # for poster in posters:
+    #     print poster.get('board_number')
+
+    posters.sort(key=lambda k: int(k['board_number']))
+    return posters
+
+
+
 if __name__ == '__main__':
     data = jsonGet("clean_contrib-all.json")
 
@@ -103,11 +113,11 @@ if __name__ == '__main__':
         "prizes": prizeList,
         "plenarys": plenaryList,
         "paralleltalks": paralleltalkList,
-        "posters": posterList
+        "posters": sortByBoardNum(posterList)
     }
 
     for key in contribsDict :
-        outputJsonFile(contribsDict[key],filesuffix=key)
+        outputJsonFile(contribsDict[key],filesuffix=key, timestamp=False)
 
 
     print ("done")
