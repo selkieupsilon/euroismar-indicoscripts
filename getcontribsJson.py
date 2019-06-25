@@ -79,14 +79,28 @@ def outputJsonFile(data, filesuffix="all", timestamp=True, filename=None):
 
 
 def sortByBoardNum(posters):
-
     # for poster in posters:
+    #     try:
+    #         # check posters have board_numbers
+    #     except:
+    #         # complain if there are posters without board numbers
     #     print poster.get('board_number')
 
     posters.sort(key=lambda k: int(k['board_number']))
     return posters
 
+def sortByStartTime(talks):
+    for talk in talks:
+        try:
+            starttimeDict = talk.get("startDate")
+            starttimeStr = starttimeDict["date"] + " " + starttimeDict["time"]
+        except:
+            print "Warning: unscheduled talk in exported JSON list."
+            return
+        #print starttimeStr
 
+    talks.sort(key=lambda t: dt.strptime(t['startDate']['date']+' '+t['startDate']['time'],"%Y-%m-%d %H:%M:%S"))
+    return talks
 
 if __name__ == '__main__':
     data = jsonGet("clean_contrib-all.json")
@@ -97,6 +111,7 @@ if __name__ == '__main__':
     prizeList = []
 
     #prizeList, plenaryList, paralleltalkList, posterList
+    #this division drops any "contributions" that are outside these categories
 
     for contrib in data :
         contribType = contrib.get('type')
@@ -110,9 +125,9 @@ if __name__ == '__main__':
             prizeList.append(contrib)
 
     contribsDict = {
-        "prizes": prizeList,
-        "plenarys": plenaryList,
-        "paralleltalks": paralleltalkList,
+        "prizes": sortByStartTime(prizeList),
+        "plenarys": sortByStartTime(plenaryList),
+        "paralleltalks": sortByStartTime(paralleltalkList),
         "posters": sortByBoardNum(posterList)
     }
 
