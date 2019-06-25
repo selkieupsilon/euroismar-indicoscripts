@@ -159,6 +159,7 @@ if __name__ == '__main__':
     paralleltalkList = []
     plenaryList = []
     prizeList = []
+    introList = []
 
     #prizeList, plenaryList, paralleltalkList, posterList
     #this division drops any "contributions" that are outside these categories
@@ -173,6 +174,8 @@ if __name__ == '__main__':
             plenaryList.append(contrib)
         if contribType == 'Prize lecture':
             prizeList.append(contrib)
+        if contribType == 'Introduction':
+            introList.append(contrib)
 
     contribsDict = {
         "prize-PR": sortByStartTime(prizeList),
@@ -188,9 +191,9 @@ if __name__ == '__main__':
     for key in contribsDict :
         outputJsonFile(contribsDict[key],fileprefix="abstract_", filesuffix=key, timestamp=args.timestamp)
 
-    timetable = prizeList + plenaryList + paralleltalkList
+    timetable = sortByRoomTime(prizeList + plenaryList + paralleltalkList + introList)
 
-    #outputJsonFile(sortByRoomTime(timetable), fileprefix="timetable_", timestamp=args.timestamp)
+    #outputJsonFile(timetable, fileprefix="timetable_", timestamp=args.timestamp)
 
     TTtalkList = [] 
     for talk in timetable:
