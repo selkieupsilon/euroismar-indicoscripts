@@ -84,7 +84,7 @@ def sortByBoardNum(posters):
     #         # check posters have board_numbers
     #     except:
     #         # complain if there are posters without board numbers
-    #     print poster.get('board_number')
+    #     print (poster.get('board_number'))
 
     posters.sort(key=lambda k: int(k['board_number']))
     return posters
@@ -95,9 +95,9 @@ def sortByStartTime(talks):
             starttimeDict = talk.get("startDate")
             starttimeStr = starttimeDict["date"] + " " + starttimeDict["time"]
         except:
-            print "Warning: unscheduled talk in exported JSON list."
+            print ("Warning: unscheduled talk in exported JSON list.")
             return
-        #print starttimeStr
+        #print (starttimeStr)
 
     talks.sort(key=lambda t: dt.strptime(t['startDate']['date']+' '+t['startDate']['time'],"%Y-%m-%d %H:%M:%S"))
     return talks
@@ -109,18 +109,18 @@ def sortByStartTime(talks):
 #             starttimeDict = talk.get("startDate")
 #             starttimeStr = starttimeDict["date"] + " " + starttimeDict["time"]
 #         except:
-#             print "Warning: something wrong."
+#             print ("Warning: something wrong.")
 #             return
-#         print room, starttimeStr
+#         print (room, starttimeStr)
 
 def sortByRoomTime(paralleltalks):
     for talk in paralleltalks:
         try:
             room = talk.get("room")
         except:
-            print "Warning: talk without assigned room in exported JSON list."
+            print ("Warning: talk without assigned room in exported JSON list.")
             return
-        #print room
+        #print (room)
 
     sortRoomOrder = {
         "Max Kade Auditorium": 0,
