@@ -62,9 +62,11 @@ def signedContribsUrl():
 
     return PREFIX+build_indico_request(PATH, PARAMS, API_KEY, SECRET_KEY)
 
-def outputJsonFile(data, filesuffix="all", timestamp=True, filename=None):
+def outputJsonFile(data,fileprefix=None, filesuffix="all", timestamp=True, filename=None):
     if not filename:
-        filename = "clean_contrib-" + filesuffix
+        if not fileprefix:
+            fileprefix = "clean_contrib-"
+        filename = fileprefix + filesuffix
 
         if timestamp:
             now = dt.now()
@@ -164,6 +166,6 @@ if __name__ == '__main__':
     }
 
     for key in contribsDict :
-        outputJsonFile(contribsDict[key],filesuffix=key, timestamp=False)
+        outputJsonFile(contribsDict[key],fileprefix="abstract_", filesuffix=key, timestamp=False)
 
     print ("done")
