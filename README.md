@@ -1,5 +1,6 @@
 # euroismar-indicoscripts
-Indico scripts for exporting data and various specific tasks, developed for EUROISMAR 2019
+Python scripts for exporting data and various specific tasks from the Indico conference management system.
+Developed for EUROISMAR 2019 http://www.euroismar2019.org/
 
 Tasks:
 * JSON export from Indico for EUROISMAR 2019 abstract book typesetting
