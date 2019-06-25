@@ -59,7 +59,21 @@ print ("tidy up JSON")
 now = dt.now()
 timestamp = now.strftime("%Y%m%d-%H%M")
 
-with open("clean_contrib_"+timestamp+".json", "w") as write_file:
+with open("clean_contrib-all_"+timestamp+".json", "w") as write_file:
     json.dump(contribs, write_file)
+
+posterList = []
+paralleltalkList = []
+plenaryList = []
+prizeList = []
+
+for contrib in contribs :
+    contribType = contrib.get('type')
+    if contribType == 'Poster':
+        posterList.append(contrib)
+    if contribType == 'Talk' or contribType == 'Invited talk':
+        paralleltalkList.append(contrib)
+    if contribType == 'Plenary talk':
+        plenaryList.append(contrib)
 
 print ("done")
