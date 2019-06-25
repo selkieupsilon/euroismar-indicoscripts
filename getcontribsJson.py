@@ -11,6 +11,8 @@ from ConfigParser import SafeConfigParser as ConfigParser
 
 from datetime import datetime as dt
 
+import argparse
+
 def jsonGet(jsonFile):
     try:
         with open (jsonFile,"r") as read_file:
@@ -165,7 +167,11 @@ if __name__ == '__main__':
         "posters": sortByBoardNum(posterList)
     }
 
+    parser = argparse.ArgumentParser(description = "Gets contributions from one event using HTTP API, then sort into JSON files for typesetting. See github: selkieupsilon/euroismar-indicoscripts")
+    parser.add_argument('--timestamp', action='store_true', help='add timestamp to output files')
+    args = parser.parse_args()
+
     for key in contribsDict :
-        outputJsonFile(contribsDict[key],fileprefix="abstract_", filesuffix=key, timestamp=False)
+        outputJsonFile(contribsDict[key],fileprefix="abstract_", filesuffix=key, timestamp=args.timestamp)
 
     print ("done")
