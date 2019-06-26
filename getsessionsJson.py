@@ -182,18 +182,27 @@ def parseSession(data):
     parsedData["room"] = data["room"]
 
     parsedContribs = []
-    contribs = data["contributions"]
+    contribsUnsorted = data["contributions"]
+    contribs = sortByStartTime(contribsUnsorted)
+    
     for talk in contribs:
         parsedTalk = OrderedDict({})
-        
+        if data["session"]["type"] != u"Plenary lecture":
+            try: 
+                speaker = talk["speakers"][0]
+                parsedTalk["speaker"] = getInitials(speaker["first_name"])+speaker["last_name"]
+            except:
+                # posters
+                pass
+        else:
+            try: 
+                speaker = talk["speakers"][0]
+                parsedTalk["speaker"] = speaker["first_name"]+' '+speaker["last_name"]
+            except:
+                # prizes to be announced
+                pass
+
         parsedTalk["title"] = talk["title"]
-        
-        try: 
-            speaker = talk["speakers"][0]
-            parsedTalk["speaker"] = getInitials(speaker["first_name"])+speaker["last_name"]
-        except:
-            # prizes to be announced and posters
-            pass
         
         parsedTalk["time"] = prettyStartEnd(talk, "startDate", "endDate")
 
@@ -206,7 +215,7 @@ def parseSession(data):
 if __name__ == '__main__':
     data = jsonGet("session-all.json")
 
-    sorteddata = sortByRoomTime(data)
+    sorteddata = sortByRoomTime(data)  # sessions are sorted, but talks within a session aren't
 
     simplifiedSessions = []
 
