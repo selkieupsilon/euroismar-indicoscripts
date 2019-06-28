@@ -16,7 +16,7 @@ getcontribsJson.py
 
 getsessionsJson
 * JSON export from Indico for EUROISMAR 2019 abstract book typesetting - program pages
- * constructs HTTP API request to Indico for sessions in event
- * removes event nodes that are unnecessary for sessions
- * sort sessions by room and time
- * simplify JSON to what is necessary for the program pages
+  * constructs HTTP API request to Indico for sessions in event
+  * removes event nodes that are unnecessary for sessions
+  * sort sessions by room and time
+  * simplify JSON to what is necessary for the program pages
