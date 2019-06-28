@@ -14,7 +14,7 @@ getcontribsJson.py
   * Talks are sorted by start time
   * Parallel sessions are sorted first by room, then by start time
 
-getsessionsJson
+getsessionsJson.py
 * JSON export from Indico for EUROISMAR 2019 abstract book typesetting - program pages
   * constructs HTTP API request to Indico for sessions in event
   * removes event nodes that are unnecessary for sessions
